@@ -1,3 +1,11 @@
+C:\Users\taima\Desktop\Programming\CSharp\TextExtractor\WordDocumentSearcher\obj\Debug\net10.0\WordDocumentSearcher.csproj.AssemblyReference.cache
+C:\Users\taima\Desktop\Programming\CSharp\TextExtractor\WordDocumentSearcher\obj\Debug\net10.0\Avalonia\Resources.Inputs.cache
+C:\Users\taima\Desktop\Programming\CSharp\TextExtractor\WordDocumentSearcher\obj\Debug\net10.0\Avalonia\resources
+C:\Users\taima\Desktop\Programming\CSharp\TextExtractor\WordDocumentSearcher\obj\Debug\net10.0\WordDocumentSearcher.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\taima\Desktop\Programming\CSharp\TextExtractor\WordDocumentSearcher\obj\Debug\net10.0\WordDocumentSearcher.AssemblyInfoInputs.cache
+C:\Users\taima\Desktop\Programming\CSharp\TextExtractor\WordDocumentSearcher\obj\Debug\net10.0\WordDocumentSearcher.AssemblyInfo.cs
+C:\Users\taima\Desktop\Programming\CSharp\TextExtractor\WordDocumentSearcher\obj\Debug\net10.0\WordDocumentSearcher.csproj.CoreCompileInputs.cache
+C:\Users\taima\Desktop\Programming\CSharp\TextExtractor\WordDocumentSearcher\obj\Debug\net10.0\WordDocumentSearcher.sourcelink.json
 C:\Users\taima\Desktop\Programming\CSharp\TextExtractor\WordDocumentSearcher\bin\Debug\net10.0\WordDocumentSearcher.exe
 C:\Users\taima\Desktop\Programming\CSharp\TextExtractor\WordDocumentSearcher\bin\Debug\net10.0\WordDocumentSearcher.deps.json
 C:\Users\taima\Desktop\Programming\CSharp\TextExtractor\WordDocumentSearcher\bin\Debug\net10.0\WordDocumentSearcher.runtimeconfig.json
@@ -122,13 +130,6 @@ C:\Users\taima\Desktop\Programming\CSharp\TextExtractor\WordDocumentSearcher\bin
 C:\Users\taima\Desktop\Programming\CSharp\TextExtractor\WordDocumentSearcher\bin\Debug\net10.0\runtimes\win\lib\net6.0\System.Drawing.Common.dll
 C:\Users\taima\Desktop\Programming\CSharp\TextExtractor\WordDocumentSearcher\bin\Debug\net10.0\runtimes\win\lib\net6.0\System.Security.Cryptography.ProtectedData.dll
 C:\Users\taima\Desktop\Programming\CSharp\TextExtractor\WordDocumentSearcher\bin\Debug\net10.0\runtimes\win\lib\net6.0\System.Windows.Extensions.dll
-C:\Users\taima\Desktop\Programming\CSharp\TextExtractor\WordDocumentSearcher\obj\Debug\net10.0\WordDocumentSearcher.csproj.AssemblyReference.cache
-C:\Users\taima\Desktop\Programming\CSharp\TextExtractor\WordDocumentSearcher\obj\Debug\net10.0\Avalonia\Resources.Inputs.cache
-C:\Users\taima\Desktop\Programming\CSharp\TextExtractor\WordDocumentSearcher\obj\Debug\net10.0\Avalonia\resources
-C:\Users\taima\Desktop\Programming\CSharp\TextExtractor\WordDocumentSearcher\obj\Debug\net10.0\WordDocumentSearcher.GeneratedMSBuildEditorConfig.editorconfig
-C:\Users\taima\Desktop\Programming\CSharp\TextExtractor\WordDocumentSearcher\obj\Debug\net10.0\WordDocumentSearcher.AssemblyInfoInputs.cache
-C:\Users\taima\Desktop\Programming\CSharp\TextExtractor\WordDocumentSearcher\obj\Debug\net10.0\WordDocumentSearcher.AssemblyInfo.cs
-C:\Users\taima\Desktop\Programming\CSharp\TextExtractor\WordDocumentSearcher\obj\Debug\net10.0\WordDocumentSearcher.csproj.CoreCompileInputs.cache
 C:\Users\taima\Desktop\Programming\CSharp\TextExtractor\WordDocumentSearcher\obj\Debug\net10.0\WordDocu.F6E37433.Up2Date
 C:\Users\taima\Desktop\Programming\CSharp\TextExtractor\WordDocumentSearcher\obj\Debug\net10.0\WordDocumentSearcher.dll
 C:\Users\taima\Desktop\Programming\CSharp\TextExtractor\WordDocumentSearcher\obj\Debug\net10.0\refint\WordDocumentSearcher.dll

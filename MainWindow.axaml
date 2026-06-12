@@ -5,5 +5,11 @@
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="WordDocumentSearcher.MainWindow"
         Title="WordDocumentSearcher">
-    <Button Content="Click me" Click="button_test"/>
+    <StackPanel Margin="20">
+      <TextBlock Margin="0 5">Search Term:</TextBlock>
+      <TextBox PlaceholderText="Enter search term"/>
+      <TextBlock Margin="0 5">Abstract character length:</TextBlock>
+      <TextBox PlaceholderText="Enter a whole number"/>
+      <Button Content="Search" Click="button_test"/>
+    </StackPanel>
 </Window>

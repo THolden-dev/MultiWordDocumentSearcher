@@ -5,6 +5,7 @@ using Avalonia;
 using IronWord;
 using Avalonia.Markup.Xaml;
 using System.Collections.Generic;
+using System.IO;
 
 namespace WordDocumentSearcher;
 
@@ -15,11 +16,9 @@ public partial class MainWindow : Window
         InitializeComponent();
     }
 
-    public static List<int> SearchWordInDoc(string FilePath, string TermToSearch)
+    public static List<int> SearchWordInDoc(string TextToSearch, string TermToSearch)
     {
-        WordDocument DocToSearch = new WordDocument("Test2.docx");
-        string TextToSearch = DocToSearch.ExtractText();
-        string searchTerm = TermTosearch;
+        string searchTerm = TermToSearch;
         List<int> Indices = new();
 
         int startIndex = 0;
@@ -39,33 +38,14 @@ public partial class MainWindow : Window
             // Move past this match
             startIndex = index + searchTerm.Length;
         }
+
+        return Indices;
     } 
 
-    public void button_test(object sender, RoutedEventArgs e)
+    public static void OutputSearchResults(List <int> Indices, string TextToSearch)
     {
-        WordDocument DocToSearch = new WordDocument("Test2.docx");
-        string TextToSearch = DocToSearch.ExtractText();
-        string searchTerm = "However";
-        int CharDisplayRange = 300;
-        List<int> Indices = new();
+        int CharDisplayRange = 100;
 
-        int startIndex = 0;
-        int index = 0;
-        while (index != -1)
-        {
-            index = TextToSearch.IndexOf(
-                searchTerm,
-                startIndex,
-                StringComparison.OrdinalIgnoreCase);
-
-            if (index >= 0)
-            {
-                Indices.Add(index);
-            }
-
-            // Move past this match
-            startIndex = index + searchTerm.Length;
-        }
         for (int i = 0; i < Indices.Count; i++)
         {
             int UpperRange = Indices[i] + CharDisplayRange / 2;
@@ -93,5 +73,19 @@ public partial class MainWindow : Window
             Console.WriteLine("------------------");
             Console.WriteLine(SearchRangeString);
         }
+    }
+
+    public void button_test(object sender, RoutedEventArgs e)
+    {
+        DirectoryInfo Directories = new DirectoryInfo("SearchArea");
+        FileInfo [] Files = Directories.GetFiles();
+        foreach(FileInfo FileInDir in Files)
+        {           
+            WordDocument DocToSearch = new WordDocument("SearchArea/" + FileInDir.Name);
+            string TextToSearch = DocToSearch.ExtractText();
+            List <int> Indices = SearchWordInDoc(TextToSearch, "However");
+            OutputSearchResults(Indices, TextToSearch);
+        }
+        
     }
 }
