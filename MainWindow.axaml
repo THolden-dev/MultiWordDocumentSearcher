@@ -9,33 +9,17 @@
     
     <StackPanel Margin="20">
       <ScrollViewer Name="ResultsScrollSection" VerticalScrollBarVisibility="Visible" HorizontalScrollBarVisibility="Disabled">
-        <StackPanel Margin="20">
-          <TextBlock Text="Hello" TextWrapping="Wrap" />
-          <TextBlock Text="Hello" TextWrapping="Wrap" />
-          <TextBlock Text="Hello" TextWrapping="Wrap" />
-          <TextBlock Text="Hello" TextWrapping="Wrap" />
-          <TextBlock Text="Hello" TextWrapping="Wrap" />
-          <TextBlock Text="Hello" TextWrapping="Wrap" />
-          <TextBlock Text="Hello" TextWrapping="Wrap" />
-          <TextBlock Text="Hello" TextWrapping="Wrap" />
-          <TextBlock Text="Hello" TextWrapping="Wrap" />
-          <TextBlock Text="Hello" TextWrapping="Wrap" />
-          <TextBlock Text="Hello" TextWrapping="Wrap" />
-          <TextBlock Text="Hello" TextWrapping="Wrap" />
-          <TextBlock Text="Hello" TextWrapping="Wrap" />
-          <TextBlock Text="Hello" TextWrapping="Wrap" />
-          <TextBlock Text="Hello" TextWrapping="Wrap" />
-          <TextBlock Text="Hello" TextWrapping="Wrap" />
-          <TextBlock Text="Hello" TextWrapping="Wrap" />
-          <TextBlock Text="Hello" TextWrapping="Wrap" />
-          <TextBlock Text="Hello" TextWrapping="Wrap" />
-          <TextBlock Text="Hello" TextWrapping="Wrap" />
-          <TextBlock Text="Hello" TextWrapping="Wrap" />
-          <TextBlock Text="Hello" TextWrapping="Wrap" />
-          <TextBlock Text="Hello" TextWrapping="Wrap" />
-          <TextBlock Text="Hello" TextWrapping="Wrap" />
-        </StackPanel>
+        <Grid Name="ResultsGrid" ColumnDefinitions="*,*,*">
+        </Grid>
       </ScrollViewer>
+      <StackPanel Name="ViewResultPanel" IsVisible="false">
+        <Button Content="Back" Click="backButton"/>
+        <ScrollViewer Name="ViewResultsScroll" VerticalScrollBarVisibility="Visible" HorizontalScrollBarVisibility="Disabled">
+          <Grid Name="ViewResultsGrid" ColumnDefinitions="Auto,Auto">
+          </Grid>
+        </ScrollViewer>
+      </StackPanel>
+    
       <TextBlock Margin="0 5">Search Term:</TextBlock>
       <TextBox Name="SearchTermTextBox" PlaceholderText="Enter search term"/>
       <TextBlock Margin="0 5">Abstract character length:</TextBlock>
