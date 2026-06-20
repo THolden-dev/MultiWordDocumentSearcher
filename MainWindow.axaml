@@ -6,24 +6,35 @@
         x:Class="WordDocumentSearcher.MainWindow"
         Title="WordDocumentSearcher">
 
-    
-    <StackPanel Margin="20">
-      <ScrollViewer Name="ResultsScrollSection" VerticalScrollBarVisibility="Visible" HorizontalScrollBarVisibility="Disabled">
-        <Grid Name="ResultsGrid" ColumnDefinitions="*,*,*">
+    <Grid RowDefinitions="*, Auto" Background="#F8F8F8">
+      
+        <Grid Grid.Row="0">
+            <ScrollViewer Name="ResultsScrollSection" VerticalScrollBarVisibility="Visible" HorizontalScrollBarVisibility="Disabled">
+                <Grid Name="ResultsGrid">
+                </Grid>
+            </ScrollViewer>
+            
+            <Grid Name="ViewResultPanel" IsVisible="false" RowDefinitions="Auto, *">
+                <Button Content="Back" Click="backButton" Grid.Row="0" Margin="0,0,0,10"/>
+                <ScrollViewer Name="ViewResultsScroll" VerticalScrollBarVisibility="Visible" HorizontalScrollBarVisibility="Disabled" Grid.Row="1">
+                    <Grid Name="ViewResultsGrid">
+                    </Grid>
+                </ScrollViewer>
+            </Grid>
         </Grid>
-      </ScrollViewer>
-      <StackPanel Name="ViewResultPanel" IsVisible="false">
-        <Button Content="Back" Click="backButton"/>
-        <ScrollViewer Name="ViewResultsScroll" VerticalScrollBarVisibility="Visible" HorizontalScrollBarVisibility="Disabled">
-          <Grid Name="ViewResultsGrid" ColumnDefinitions="Auto,Auto">
-          </Grid>
-        </ScrollViewer>
-      </StackPanel>
-    
-      <TextBlock Margin="0 5">Search Term:</TextBlock>
-      <TextBox Name="SearchTermTextBox" PlaceholderText="Enter search term"/>
-      <TextBlock Margin="0 5">Abstract character length:</TextBlock>
-      <TextBox Name="CharacterLengthTextBox" PlaceholderText="Enter a whole number"/>
-      <Button Content="Search" Click="button_test"/>
-    </StackPanel>
+
+        <StackPanel Grid.Row="1" Margin="0,15,0,0">
+            <TextBlock Margin="0,5">Search Term:</TextBlock>
+            <TextBox Name="SearchTermTextBox" PlaceholderText="Enter search term"/>
+            
+            <TextBlock Margin="0,5">Abstract character length:</TextBlock>
+            <TextBox Name="CharacterLengthTextBox" PlaceholderText="Enter a whole number"/>
+            
+            <Grid ColumnDefinitions="*,*">
+                <Button Content="Search" Click="button_test" Grid.Column="0" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center"/>
+                <Button Content="Select Folder" Click="SelectFolderButton" Grid.Column="1" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center"/>
+            </Grid>
+        </StackPanel>
+        
+    </Grid>
 </Window>

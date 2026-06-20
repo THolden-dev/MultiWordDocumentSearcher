@@ -6,6 +6,9 @@ using IronWord;
 using Avalonia.Markup.Xaml;
 using System.Collections.Generic;
 using System.IO;
+using Avalonia.Platform.Storage;
+using System.Threading.Tasks;
+using Avalonia.Media;
 
 namespace WordDocumentSearcher;
 
@@ -13,7 +16,9 @@ public partial class MainWindow : Window
 {
     private Dictionary<string, int> MatchCounts = new Dictionary<string, int>();
     private Dictionary<string, List<int>> IndexList = new Dictionary<string, List<int>>();
+    private string BasePath = "";
     private int NumberOfCharsToDisplay = 100;
+    private int RowCount = 0;
 
     public MainWindow()
     {
@@ -112,7 +117,6 @@ public partial class MainWindow : Window
     {
         if (ResultsScrollSection != null)
         {
-            // Limit results area to 50% of the window height
             ResultsScrollSection.MaxHeight = Bounds.Height * 0.5;
 
         }
@@ -141,20 +145,40 @@ public partial class MainWindow : Window
         TextBlock matchCountsBlock = new TextBlock();
         matchCountsBlock.Text = MatchCount.ToString();
 
-      
+        Grid EntryGrid = new Grid
+        {
+            ColumnDefinitions = ColumnDefinitions.Parse("*,*,*")
+        };
 
-        Grid.SetRow(fileNameBlock, row);
+        var EntryBorder = new Border
+        {
+            Background = Brushes.White,
+            BorderBrush = Brushes.Transparent,
+            CornerRadius = new CornerRadius(3),
+            Child = EntryGrid,
+
+            BoxShadow = BoxShadows.Parse("5 5 10 0 DarkGray")
+        };
+
+        EntryBorder.Margin = new Thickness(5, 0, 10, 5);
+
+
+        Grid.SetRow(EntryBorder,row);
+
+        Grid.SetRow(fileNameBlock, 0);
         Grid.SetColumn(fileNameBlock, 0);
 
-        Grid.SetRow(matchCountsBlock, row);
+        Grid.SetRow(matchCountsBlock, 0);
         Grid.SetColumn(matchCountsBlock, 1);
 
-        Grid.SetRow(ViewButton, row);
+        Grid.SetRow(ViewButton, 0);
         Grid.SetColumn(ViewButton, 2);
 
-        ResultsGrid.Children.Add(fileNameBlock);
-        ResultsGrid.Children.Add(matchCountsBlock);
-        ResultsGrid.Children.Add(ViewButton);
+        EntryGrid.Children.Add(fileNameBlock);
+        EntryGrid.Children.Add(matchCountsBlock);
+        EntryGrid.Children.Add(ViewButton);
+
+        ResultsGrid.Children.Add(EntryBorder);
 
         
     }
@@ -175,7 +199,7 @@ public partial class MainWindow : Window
         var button = (Button)sender!;
         string FileName = (string)button.Tag!;
 
-        WordDocument DocToSearch = new WordDocument("SearchArea/" + FileName);
+        WordDocument DocToSearch = new WordDocument(Path.Combine(BasePath,FileName));
         string TextToSearch = DocToSearch.ExtractText();
         List <int> Indices = IndexList[FileName];
         int row = 0;
@@ -190,11 +214,11 @@ public partial class MainWindow : Window
             {
                 SearchRangeString = TextToSearch.Substring(LowerRange,UpperRange - TextToSearch.Length);
             }
-            else if (!RangeExceedsRight && RangeExceedsLeft)
+            else if (!RangeExceedsRight && RangeExceedsLeft && TextToSearch.Length > NumberOfCharsToDisplay)
             {
                 SearchRangeString = TextToSearch.Substring(0,NumberOfCharsToDisplay);
             }
-            else if (RangeExceedsRight && RangeExceedsLeft)
+            else if (RangeExceedsRight && RangeExceedsLeft || !RangeExceedsRight && RangeExceedsLeft && TextToSearch.Length < NumberOfCharsToDisplay)
             {
                 Console.WriteLine("I AM PRINTING EVERYTHING");
                 SearchRangeString = TextToSearch;
@@ -209,22 +233,92 @@ public partial class MainWindow : Window
             ViewResultsGrid.RowDefinitions.Add(rowDef);
 
             TextBlock IndexBlock = new TextBlock();
+            IndexBlock.Margin = new Thickness(0, 0, 10, 0);
             IndexBlock.Text = "" + Indices[i];
 
             TextBlock AbstractBlock = new TextBlock();
             AbstractBlock.Text = SearchRangeString;
+            AbstractBlock.TextWrapping = TextWrapping.Wrap;
 
-            Grid.SetRow(IndexBlock, row);
+            Grid EntryGrid = new Grid
+            {
+                ColumnDefinitions = ColumnDefinitions.Parse("Auto,*")
+            };
+
+            var EntryBorder = new Border
+            {
+                Background = Brushes.White,
+                BorderBrush = Brushes.Transparent,
+                CornerRadius = new CornerRadius(3),
+                Child = EntryGrid,
+
+                BoxShadow = BoxShadows.Parse("5 5 10 0 DarkGray")
+            };
+            EntryBorder.Margin = new Thickness(5, 0, 10, 5);
+
+            Grid.SetRow(EntryBorder,row);
+
+            Grid.SetRow(IndexBlock, 0);
             Grid.SetColumn(IndexBlock, 0);
 
-            Grid.SetRow(AbstractBlock, row);
+            Grid.SetRow(AbstractBlock, 0);
             Grid.SetColumn(AbstractBlock, 1);
 
-            ViewResultsGrid.Children.Add(IndexBlock);
-            ViewResultsGrid.Children.Add(AbstractBlock);
+            EntryGrid.Children.Add(IndexBlock);
+            EntryGrid.Children.Add(AbstractBlock);
+
+            ViewResultsGrid.Children.Add(EntryBorder);
             row++;
 
         }
+    }
+
+    private void searchDirectory(FileInfo [] Files, string TermToSearch, string ExtraPath)
+    {
+        foreach(FileInfo FileInDir in Files)
+        {
+            Console.WriteLine(FileInDir.Name);
+            if (FileInDir.Name.Contains(".docx")){       
+                
+                bool Opened = true;
+                WordDocument DocToSearch = new WordDocument();
+                try
+                {    
+                    DocToSearch = new WordDocument(Path.Combine(BasePath,ExtraPath, FileInDir.Name));
+                }
+                catch (Exception error)
+                {
+                    Console.WriteLine("Error opening: " + ExtraPath + FileInDir.Name);
+                    Opened = false;
+                }
+                if (Opened)
+                {
+                    string TextToSearch = DocToSearch.ExtractText();
+                    List <int> Indices = SearchWordInDoc(TextToSearch, TermToSearch);
+                    MatchCounts.Add(Path.Combine(ExtraPath, FileInDir.Name), Indices.Count);
+                    IndexList.Add(Path.Combine(ExtraPath, FileInDir.Name), Indices);
+                    AddEntryGraphic(Path.Combine(ExtraPath, FileInDir.Name),Indices.Count,RowCount);
+                    RowCount++;
+                }
+                
+            }
+        }
+    }
+
+    private void SearchRecSubDir(string PrevDir, DirectoryInfo [] SubDirectiories, string TermToSearch)
+    {
+        foreach (DirectoryInfo DirTosearch in SubDirectiories)
+        {
+            FileInfo [] Files = DirTosearch.GetFiles();
+            searchDirectory(Files, TermToSearch,Path.Combine(PrevDir,DirTosearch.Name));
+            DirectoryInfo Directory = new DirectoryInfo(Path.Combine(BasePath, PrevDir,DirTosearch.Name));
+            DirectoryInfo [] SubDirs = Directory.GetDirectories();
+            if (SubDirs.Length > 0)
+            {
+                SearchRecSubDir(Path.Combine(PrevDir,DirTosearch.Name) , SubDirs,TermToSearch);
+            }
+        }
+            
     }
 
     public void button_test(object sender, RoutedEventArgs e)
@@ -245,24 +339,37 @@ public partial class MainWindow : Window
             NumberOfCharsToDisplay = Int32.Parse(CharacterLengthTextBox.Text);
         }
 
-        DirectoryInfo Directories = new DirectoryInfo("SearchArea");
-        FileInfo [] Files = Directories.GetFiles();
+        DirectoryInfo Directories = new DirectoryInfo(BasePath);
+        DirectoryInfo [] SubDirectiories = Directories.GetDirectories();
+        FileInfo [] Files = Directories.GetFiles(); 
         MatchCounts = new Dictionary<string, int>();
         IndexList = new Dictionary<string, List<int>>();
 
-        int RowCount = 0;
-        foreach(FileInfo FileInDir in Files)
-        {           
-            WordDocument DocToSearch = new WordDocument("SearchArea/" + FileInDir.Name);
-            string TextToSearch = DocToSearch.ExtractText();
-            List <int> Indices = SearchWordInDoc(TextToSearch, TermToSearch);
-            MatchCounts.Add(FileInDir.Name, Indices.Count);
-            IndexList.Add(FileInDir.Name, Indices);
-            AddEntryGraphic(FileInDir.Name,Indices.Count,RowCount);
-            RowCount++;
-        }
+        RowCount = 0;
+        searchDirectory(Files, TermToSearch,"");
         //Console.WriteLine("GOT PAST HERE");
+        SearchRecSubDir("", SubDirectiories, TermToSearch);
         
         
+    }
+
+    private async Task SelectFolder()
+    {
+        var folders = await StorageProvider.OpenFolderPickerAsync(
+            new FolderPickerOpenOptions
+            {
+                Title = "Select a Folder",
+                AllowMultiple = false
+            });
+
+        if (folders.Count > 0)
+        {
+            BasePath = folders[0].Path.LocalPath;
+        }
+    }
+
+    private async void SelectFolderButton(object? sender, RoutedEventArgs e)
+    {
+        await SelectFolder();
     }
 }
