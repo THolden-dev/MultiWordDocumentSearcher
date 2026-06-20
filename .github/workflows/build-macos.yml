@@ -34,31 +34,24 @@ jobs:
 
           cp -R out/* "$APP_DIR/Contents/MacOS/"
 
-          cat <<EOF > "$APP_DIR/Contents/Info.plist"
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-<plist version="1.0">
-<dict>
-    <key>CFBundleName</key>
-    <string>WordDocumentSearcher</string>
-
-    <key>CFBundleDisplayName</key>
-    <string>WordDocumentSearcher</string>
-
-    <key>CFBundleExecutable</key>
-    <string>WordDocumentSearcher</string>
-
-    <key>CFBundleIdentifier</key>
-    <string>com.yourcompany.worddocumentsearcher</string>
-
-    <key>CFBundlePackageType</key>
-    <string>APPL</string>
-
-    <key>CFBundleVersion</key>
-    <string>1.0</string>
-</dict>
-</plist>
-EOF
+          echo '<?xml version="1.0" encoding="UTF-8"?>' > "$APP_DIR/Contents/Info.plist"
+          echo '<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">' >> "$APP_DIR/Contents/Info.plist"
+          echo '<plist version="1.0">' >> "$APP_DIR/Contents/Info.plist"
+          echo '<dict>' >> "$APP_DIR/Contents/Info.plist"
+          echo '  <key>CFBundleName</key>' >> "$APP_DIR/Contents/Info.plist"
+          echo '  <string>WordDocumentSearcher</string>' >> "$APP_DIR/Contents/Info.plist"
+          echo '  <key>CFBundleDisplayName</key>' >> "$APP_DIR/Contents/Info.plist"
+          echo '  <string>WordDocumentSearcher</string>' >> "$APP_DIR/Contents/Info.plist"
+          echo '  <key>CFBundleExecutable</key>' >> "$APP_DIR/Contents/Info.plist"
+          echo '  <string>WordDocumentSearcher</string>' >> "$APP_DIR/Contents/Info.plist"
+          echo '  <key>CFBundleIdentifier</key>' >> "$APP_DIR/Contents/Info.plist"
+          echo '  <string>com.yourcompany.worddocumentsearcher</string>' >> "$APP_DIR/Contents/Info.plist"
+          echo '  <key>CFBundlePackageType</key>' >> "$APP_DIR/Contents/Info.plist"
+          echo '  <string>APPL</string>' >> "$APP_DIR/Contents/Info.plist"
+          echo '  <key>CFBundleVersion</key>' >> "$APP_DIR/Contents/Info.plist"
+          echo '  <string>1.0</string>' >> "$APP_DIR/Contents/Info.plist"
+          echo '</dict>' >> "$APP_DIR/Contents/Info.plist"
+          echo '</plist>' >> "$APP_DIR/Contents/Info.plist"
 
           chmod +x "$APP_DIR/Contents/MacOS/WordDocumentSearcher"
 
