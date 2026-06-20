@@ -1,4 +1,4 @@
-name: Build macOS Avalonia App
+name: Build macOS WordDocumentSearcher
 
 on:
   push:
@@ -10,7 +10,7 @@ jobs:
     runs-on: macos-latest
 
     steps:
-      - name: Checkout code
+      - name: Checkout
         uses: actions/checkout@v4
 
       - name: Setup .NET
@@ -18,14 +18,55 @@ jobs:
         with:
           dotnet-version: 10.0.x
 
-      - name: Restore dependencies
+      - name: Restore
         run: dotnet restore
 
-      - name: Publish macOS app
-        run: dotnet publish -c Release -r osx-arm64 --self-contained true -o publish
+      - name: Publish
+        run: dotnet publish -c Release -r osx-arm64 --self-contained true -o out
+
+      - name: Create .app bundle
+        run: |
+          APP_NAME="WordDocumentSearcher"
+          APP_DIR="$APP_NAME.app"
+
+          mkdir -p "$APP_DIR/Contents/MacOS"
+          mkdir -p "$APP_DIR/Contents/Resources"
+
+          cp -R out/* "$APP_DIR/Contents/MacOS/"
+
+          cat <<EOF > "$APP_DIR/Contents/Info.plist"
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>CFBundleName</key>
+    <string>WordDocumentSearcher</string>
+
+    <key>CFBundleDisplayName</key>
+    <string>WordDocumentSearcher</string>
+
+    <key>CFBundleExecutable</key>
+    <string>WordDocumentSearcher</string>
+
+    <key>CFBundleIdentifier</key>
+    <string>com.yourcompany.worddocumentsearcher</string>
+
+    <key>CFBundlePackageType</key>
+    <string>APPL</string>
+
+    <key>CFBundleVersion</key>
+    <string>1.0</string>
+</dict>
+</plist>
+EOF
+
+          chmod +x "$APP_DIR/Contents/MacOS/WordDocumentSearcher"
+
+      - name: Zip app
+        run: zip -r WordDocumentSearcher-mac.zip WordDocumentSearcher.app
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
-          name: macos-build
-          path: publish/
+          name: mac-app
+          path: WordDocumentSearcher-mac.zip
