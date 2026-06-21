@@ -9,6 +9,12 @@ jobs:
   build-macos:
     runs-on: macos-latest
 
+    strategy:
+      matrix:
+        rid:
+          - osx-arm64
+          - osx-x64
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -22,7 +28,7 @@ jobs:
         run: dotnet restore
 
       - name: Publish
-        run: dotnet publish -c Release -r osx-arm64 --self-contained true -o out
+        run: dotnet publish -c Release -r ${{ matrix.rid }} --self-contained true -o out
 
       - name: Create .app bundle
         run: |
@@ -34,32 +40,47 @@ jobs:
 
           cp -R out/* "$APP_DIR/Contents/MacOS/"
 
-          echo '<?xml version="1.0" encoding="UTF-8"?>' > "$APP_DIR/Contents/Info.plist"
-          echo '<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">' >> "$APP_DIR/Contents/Info.plist"
-          echo '<plist version="1.0">' >> "$APP_DIR/Contents/Info.plist"
-          echo '<dict>' >> "$APP_DIR/Contents/Info.plist"
-          echo '  <key>CFBundleName</key>' >> "$APP_DIR/Contents/Info.plist"
-          echo '  <string>WordDocumentSearcher</string>' >> "$APP_DIR/Contents/Info.plist"
-          echo '  <key>CFBundleDisplayName</key>' >> "$APP_DIR/Contents/Info.plist"
-          echo '  <string>WordDocumentSearcher</string>' >> "$APP_DIR/Contents/Info.plist"
-          echo '  <key>CFBundleExecutable</key>' >> "$APP_DIR/Contents/Info.plist"
-          echo '  <string>WordDocumentSearcher</string>' >> "$APP_DIR/Contents/Info.plist"
-          echo '  <key>CFBundleIdentifier</key>' >> "$APP_DIR/Contents/Info.plist"
-          echo '  <string>com.yourcompany.worddocumentsearcher</string>' >> "$APP_DIR/Contents/Info.plist"
-          echo '  <key>CFBundlePackageType</key>' >> "$APP_DIR/Contents/Info.plist"
-          echo '  <string>APPL</string>' >> "$APP_DIR/Contents/Info.plist"
-          echo '  <key>CFBundleVersion</key>' >> "$APP_DIR/Contents/Info.plist"
-          echo '  <string>1.0</string>' >> "$APP_DIR/Contents/Info.plist"
-          echo '</dict>' >> "$APP_DIR/Contents/Info.plist"
-          echo '</plist>' >> "$APP_DIR/Contents/Info.plist"
+          cat > "$APP_DIR/Contents/Info.plist" << 'EOF'
+          <?xml version="1.0" encoding="UTF-8"?>
+          <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+          <plist version="1.0">
+          <dict>
+              <key>CFBundleName</key>
+              <string>WordDocumentSearcher</string>
+              <key>CFBundleDisplayName</key>
+              <string>WordDocumentSearcher</string>
+              <key>CFBundleExecutable</key>
+              <string>WordDocumentSearcher</string>
+              <key>CFBundleIdentifier</key>
+              <string>com.yourcompany.worddocumentsearcher</string>
+              <key>CFBundlePackageType</key>
+              <string>APPL</string>
+              <key>CFBundleVersion</key>
+              <string>1.0</string>
+          </dict>
+          </plist>
+          EOF
 
           chmod +x "$APP_DIR/Contents/MacOS/WordDocumentSearcher"
 
       - name: Zip app
-        run: zip -r WordDocumentSearcher-mac.zip WordDocumentSearcher.app
+        run: |
+          if [ "${{ matrix.rid }}" = "osx-arm64" ]; then
+            zip -r WordDocumentSearcher-mac-arm64.zip WordDocumentSearcher.app
+          else
+            zip -r WordDocumentSearcher-mac-x64.zip WordDocumentSearcher.app
+          fi
 
-      - name: Upload artifact
+      - name: Upload ARM64 artifact
+        if: matrix.rid == 'osx-arm64'
         uses: actions/upload-artifact@v4
         with:
-          name: mac-app
-          path: WordDocumentSearcher-mac.zip
+          name: WordDocumentSearcher-mac-arm64
+          path: WordDocumentSearcher-mac-arm64.zip
+
+      - name: Upload x64 artifact
+        if: matrix.rid == 'osx-x64'
+        uses: actions/upload-artifact@v4
+        with:
+          name: WordDocumentSearcher-mac-x64
+          path: WordDocumentSearcher-mac-x64.zip
